@@ -1,0 +1,8 @@
+---
+
+- name: Install telegraf-agent
+  hosts: all
+  user: ansible
+  become: yes
+  roles:
+    - install

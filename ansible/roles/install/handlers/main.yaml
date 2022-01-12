@@ -1,0 +1,8 @@
+---
+
+#
+# Restart telegraf-agent
+- name: restart-telegraf
+  service:
+    name: telegraf
+    state: restarted

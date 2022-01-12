@@ -1,0 +1,9 @@
+---
+telegraf_version: 1.20.2-1
+telegraf_username: telegraf
+telegraf_groupname: "{{ telegraf_username }}"
+
+telegraf_uid: 2002
+telegraf_gid: "{{ telegraf_uid }}"
+
+influxdb_database: base_os_prd

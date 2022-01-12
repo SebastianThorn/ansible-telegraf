@@ -1,0 +1,21 @@
+---
+
+#
+# Add docker-group to telegraf
+- name: Add docker-group to telegraf
+  user:
+    name: telegraf
+    groups: docker
+    append: yes
+
+#
+# Copy docker-input-template
+- name: Copy docker-input-template
+  template:
+    src: "input_docker.conf.j2"
+    dest: /etc/telegraf/telegraf.d/docker.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify:
+  - restart-telegraf

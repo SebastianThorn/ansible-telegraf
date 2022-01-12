@@ -1,0 +1,68 @@
+---
+
+#
+# Copy package-file to /tmp
+- name: Copy package-file to /tmp
+  copy:
+    src: "telegraf_{{ telegraf_version }}_amd64.deb"
+    dest: /tmp/
+
+#
+# Add telegraf group
+- name: Add telegraf group
+  group:
+    name: "{{ telegraf_groupname }}"
+    state: present
+    gid: "{{ telegraf_gid }}"
+
+#
+# Add telegraf user
+- name: Add telegraf user
+  user:
+    name: "{{ telegraf_username }}"
+    comment: Service account for telegraf-agent, Ansible
+    uid: "{{ telegraf_uid }}"
+    group: "{{ telegraf_groupname }}"
+    system: yes
+
+#
+# Install the telegraf-agent
+- name: Install the telegraf-agent
+  apt:
+    deb: "/tmp/telegraf_{{ telegraf_version }}_amd64.deb"
+
+#
+# Remove sample-file
+- name: Remove sample-file
+  file:
+    path: /etc/telegraf/telegraf.conf.sample
+    state: absent
+
+#
+# Copy base-configuration
+- name: Copy base-configuration
+  template:
+    src: "telegraf.conf.j2"
+    dest: /etc/telegraf/telegraf.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify:
+  - restart-telegraf
+
+#
+# Copy system-configuration
+- name: Copy system-configuration
+  template:
+    src: "system.conf.j2"
+    dest: /etc/telegraf/telegraf.d/system.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify:
+  - restart-telegraf
+
+#
+# Check for dynamic inputs
+- name: Check for dynamic inputs
+  include_tasks: dynamic_inputs.yaml

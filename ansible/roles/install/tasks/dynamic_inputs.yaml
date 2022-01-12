@@ -1,0 +1,11 @@
+---
+
+#
+# Load docker
+- stat:
+    path: /var/run/docker.sock
+  register: docker_stat
+
+- name: Load docker-task if file exists
+  include_tasks: input_docker.yaml
+  when: docker_stat.stat.exists
